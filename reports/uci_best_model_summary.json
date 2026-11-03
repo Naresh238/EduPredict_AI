@@ -1,0 +1,22 @@
+{
+    "dataset": "UCI Student Performance - Mathematics",
+    "source_file": "student-mat.csv",
+    "total_rows": 395,
+    "training_rows": 316,
+    "testing_rows": 79,
+    "target": "G3",
+    "target_range": "0-20",
+    "excluded_columns": [
+        "G1",
+        "G2"
+    ],
+    "selection_metric": "5-fold cross-validation MAE",
+    "selected_model": "Random Forest",
+    "cv_mae": 2.9540332811593353,
+    "cv_rmse": 3.8612317127774647,
+    "cv_r2": 0.2658788792055652,
+    "test_mae": 2.9121946149256273,
+    "test_rmse": 3.96614491118926,
+    "test_r2": 0.2569194014779139,
+    "risk_definition": "G3 < 10"
+}

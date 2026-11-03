@@ -1,0 +1,21 @@
+{
+    "dataset": "UCI Student Performance - Mathematics",
+    "total_students": 395,
+    "training_students": 316,
+    "testing_students": 79,
+    "target": "Risk derived from G3",
+    "risk_definition": "G3 < 10",
+    "features_excluded": [
+        "G1",
+        "G2",
+        "G3"
+    ],
+    "selection_metric": "5-fold cross-validation F1",
+    "selected_model": "Logistic Regression",
+    "cv_f1": 0.4779524755493191,
+    "test_accuracy": 0.6962025316455697,
+    "test_precision": 0.5294117647058824,
+    "test_recall": 0.6923076923076923,
+    "test_f1": 0.6,
+    "test_roc_auc": 0.7271407837445574
+}

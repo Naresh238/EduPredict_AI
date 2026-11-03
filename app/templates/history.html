@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prediction History | EduPredict AI</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f3f6fb;color:#243247}
+nav{background:#173b6c;padding:18px 5%;display:flex;gap:22px;flex-wrap:wrap}
+nav a{color:white;text-decoration:none;font-weight:bold}
+main{max-width:1100px;margin:35px auto;padding:0 18px}
+.card{background:white;padding:24px;border-radius:14px;box-shadow:0 4px 18px #dce3ed}
+.count{color:#15966a;font-weight:bold}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:650px}
+th,td{text-align:left;padding:13px;border-bottom:1px solid #e7ecf3}
+th{background:#edf3fa;color:#173b6c}
+.risk{color:#b42318;font-weight:bold}
+.safe{color:#087443;font-weight:bold}
+footer{text-align:center;padding:25px;color:#637083;font-size:13px}
+.button{display:inline-block;background:#15966a;color:white;padding:11px 16px;text-decoration:none;border-radius:7px}
+</style>
+</head>
+<body>
+<nav>
+<a href="/">Dashboard</a>
+<a href="/predict">Predict</a>
+<a href="/analytics">Analytics</a>
+<a href="/history">History</a>
+<a href="/about">About</a>
+</nav>
+<main>
+<section class="card">
+<h1>Prediction History</h1>
+<p>Latest saved student predictions</p>
+<p class="count">{{ total_predictions }} saved prediction(s)</p>
+{% if predictions %}
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>ID</th><th>Date/time (UTC)</th><th>Predicted Grade</th>
+<th>Risk Status</th><th>Risk Probability</th><th>Student Details</th>
+</tr>
+</thead>
+<tbody>
+{% for item in predictions %}
+<tr>
+<td>{{ item["id"] }}</td>
+<td>{{ item["created_at"] }}</td>
+<td>{{ "%.2f"|format(item["predicted_grade"]) }} / 20</td>
+<td>
+{% if item["risk_status"] == "At Risk" %}
+<span class="risk">{{ item["risk_status"] }}</span>
+{% else %}
+<span class="safe">{{ item["risk_status"] }}</span>
+{% endif %}
+</td>
+<td>
+{% if item["risk_probability"] is not none %}
+{{ "%.2f"|format(item["risk_probability"]) }}%
+{% else %}
+Not available
+{% endif %}
+</td>
+<td>
+{% if item["student_details"] %}
+<details>
+<summary>View details</summary>
+<pre style="white-space:pre-wrap;max-width:350px;overflow-wrap:anywhere">{{ item["student_details"] | tojson(indent=2) }}</pre>
+</details>
+{% else %}
+Not recorded
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% else %}
+<p>No predictions saved yet. Submit the prediction form to add your first record.</p>
+<a class="button" href="/predict">Make a Prediction</a>
+{% endif %}
+</section>
+</main>
+<footer>Developed by P. Naresh | Saveetha University, Chennai</footer>
+</body>
+</html>

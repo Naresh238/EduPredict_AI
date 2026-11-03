@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPredict AI | Analytics</title>
+    <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
+    <style>
+        :root {
+            --navy: #173b6c;
+            --green: #15966a;
+            --background: #f4f7fb;
+            --text: #243247;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--text);
+        }
+
+        header {
+            background: var(--navy);
+            color: white;
+            padding: 22px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h1 { margin: 0; font-size: 24px; }
+        header p { margin: 7px 0 0; color: #dbeafe; }
+
+        nav { display: flex; gap: 16px; flex-wrap: wrap; }
+        nav a { color: white; text-decoration: none; font-weight: bold; }
+        nav a:hover { color: #86efac; }
+
+        main { max-width: 1400px; margin: auto; padding: 28px 5%; }
+
+        .intro { margin-bottom: 24px; }
+        .intro h2 { margin-bottom: 8px; }
+        .intro p { color: var(--muted); line-height: 1.6; }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .metric, .chart-card, .notice {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+        }
+
+        .metric { padding: 22px; }
+        .metric-label { color: var(--muted); font-size: 14px; }
+        .metric-value { font-size: 30px; font-weight: bold; margin: 12px 0 6px; }
+        .metric-detail { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+        .charts {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .chart-card { padding: 16px; min-width: 0; }
+        .chart-card h3 { margin: 8px 8px 0; font-size: 17px; }
+        .chart-card p { margin: 8px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+        .chart { width: 100%; min-height: 340px; }
+
+        .notice { margin-top: 24px; padding: 20px; line-height: 1.7; }
+        .notice h3 { margin-top: 0; }
+
+        footer { text-align: center; padding: 25px; color: var(--muted); }
+
+        @media (max-width: 800px) {
+            .charts { grid-template-columns: 1fr; }
+            header { padding: 20px 5%; }
+            .chart { min-height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>EduPredict AI</h1>
+        <p>Student Performance Analytics</p>
+    </div>
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/predict">Predict</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/about">About</a>
+    </nav>
+</header>
+
+<main>
+    <section class="intro">
+        <h2>Analytics Dashboard</h2>
+        <p>
+            Explore the student dataset, final grade distribution, machine-learning
+            evaluation results, and exploratory feature importance.
+        </p>
+    </section>
+
+    <section class="metrics">
+        <article class="metric">
+            <div class="metric-label">Students in Dataset</div>
+            <div class="metric-value">{{ total_students }}</div>
+            <div class="metric-detail">UCI Student Performance — Mathematics</div>
+        </article>
+
+        <article class="metric">
+            <div class="metric-label">At-Risk Students</div>
+            <div class="metric-value">{{ at_risk_count }}</div>
+            <div class="metric-detail">{{ at_risk_percent }}% of this dataset; project label is G3 &lt; 10</div>
+        </article>
+
+        <article class="metric">
+            <div class="metric-label">Grade Model MAE</div>
+            <div class="metric-value">{{ grade_mae }}</div>
+            <div class="metric-detail">Mean absolute error on the test set, out of 20 grade points</div>
+        </article>
+
+        <article class="metric">
+            <div class="metric-label">Risk Model Recall</div>
+            <div class="metric-value">{{ risk_recall }}%</div>
+            <div class="metric-detail">Recall for the at-risk class on the test set</div>
+        </article>
+
+        <article class="metric">
+            <div class="metric-label">Risk Model ROC-AUC</div>
+            <div class="metric-value">{{ risk_auc }}</div>
+            <div class="metric-detail">Test-set discrimination metric</div>
+        </article>
+    </section>
+
+    <section class="charts">
+        <article class="chart-card">
+            <h3>Student Risk Distribution</h3>
+            <p>Counts of students in each project-defined risk category.</p>
+            <div id="riskChart" class="chart"></div>
+        </article>
+
+        <article class="chart-card">
+            <h3>Final Grade Distribution</h3>
+            <p>Distribution of final mathematics grades (G3), ranging from 0 to 20.</p>
+            <div id="gradeChart" class="chart"></div>
+        </article>
+
+        <article class="chart-card">
+            <h3>Regression Model Comparison</h3>
+            <p>Test-set MAE: lower values indicate smaller average prediction errors.</p>
+            <div id="regressionChart" class="chart"></div>
+        </article>
+
+        <article class="chart-card">
+            <h3>Risk Classification Comparison</h3>
+            <p>Test-set F1 scores from the saved model comparison report.</p>
+            <div id="classificationChart" class="chart"></div>
+        </article>
+
+        <article class="chart-card">
+            <h3>Risk Model Feature Importance</h3>
+            <p>Permutation importance measured by the decrease in test-set F1 when a feature is shuffled. This is not evidence of causation.</p>
+            <div id="importanceChart" class="chart"></div>
+        </article>
+
+        <article class="chart-card">
+            <h3>Risk Model Evaluation</h3>
+            <p>Test-set classification metrics. Accuracy alone does not describe every type of model error.</p>
+            <div id="evaluationChart" class="chart"></div>
+        </article>
+    </section>
+
+    <section class="notice">
+        <h3>Responsible Use and Limitations</h3>
+        <p>
+            This project uses a relatively small educational dataset. The risk label
+            is a project convention based on G3 &lt; 10, not a universal definition
+            of academic risk. Model metrics are specific to the saved test split.
+            Feature importance describes model reliance, not cause and effect.
+            Do not use these predictions as the sole basis for decisions about real students.
+        </p>
+    </section>
+</main>
+
+<footer>Developed by P. Naresh | Saveetha University, Chennai</footer>
+
+<script>
+    const charts = {{ charts_json | safe }};
+
+    const layoutBase = {
+        paper_bgcolor: "#ffffff",
+        plot_bgcolor: "#ffffff",
+        font: { family: "Arial, sans-serif", color: "#243247" },
+        margin: { l: 55, r: 20, t: 25, b: 65 },
+        autosize: true
+    };
+
+    function drawChart(elementId, data, layout) {
+        Plotly.newPlot(
+            elementId,
+            data,
+            {...layoutBase, ...layout},
+            {responsive: true, displaylogo: false}
+        );
+    }
+
+    drawChart("riskChart", charts.risk.data, charts.risk.layout);
+    drawChart("gradeChart", charts.grade.data, charts.grade.layout);
+    drawChart("regressionChart", charts.regression.data, charts.regression.layout);
+    drawChart("classificationChart", charts.classification.data, charts.classification.layout);
+    drawChart("importanceChart", charts.importance.data, charts.importance.layout);
+    drawChart("evaluationChart", charts.evaluation.data, charts.evaluation.layout);
+</script>
+
+</body>
+</html>

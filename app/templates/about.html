@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | EduPredict AI</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="/">EduPredict <span>AI</span></a>
+    <div class="nav-links">
+        <a href="/">Dashboard</a>
+        <a href="/predict">Make Prediction</a>
+        <a href="/about">About</a>
+    </div>
+</nav>
+
+<main class="container">
+    <section class="hero">
+        <p class="eyebrow">ABOUT THE PROJECT</p>
+        <h1>EduPredict AI</h1>
+        <p>
+            An end-to-end machine-learning portfolio project for
+            academic grade estimation and exploratory student-risk analysis.
+        </p>
+    </section>
+
+    <section class="card content-card">
+        <h2>Dataset</h2>
+        <p>
+            The project uses the UCI Student Performance Mathematics
+            dataset containing 395 student records.
+        </p>
+
+        <h2>Machine-learning workflow</h2>
+        <ul>
+            <li>Data inspection and preprocessing</li>
+            <li>Numeric and categorical feature transformation</li>
+            <li>Regression model comparison using cross-validation</li>
+            <li>Risk classification and held-out evaluation</li>
+            <li>Confusion matrix, ROC curve, and permutation importance</li>
+            <li>Flask web application for model inference</li>
+        </ul>
+
+        <h2>Selected models</h2>
+        <p>Grade prediction: Random Forest Regressor.</p>
+        <p>Risk classification: Logistic Regression.</p>
+
+        <h2>Responsible use</h2>
+        <p>
+            The dataset is limited in size and context. Predictions should
+            not be used alone to grade students, deny opportunities,
+            or make consequential educational decisions.
+        </p>
+    </section>
+</main>
+
+<footer>
+    Developed by P. Naresh | Saveetha University, Chennai
+</footer>
+
+</body>
+</html>

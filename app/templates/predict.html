@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Prediction | EduPredict AI</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="/">EduPredict <span>AI</span></a>
+    <div class="nav-links">
+        <a href="/">Dashboard</a>
+        <a href="/predict">Make Prediction</a>
+        <a href="/about">About</a>
+    </div>
+</nav>
+
+<main class="container">
+    <section class="page-heading">
+        <p class="eyebrow">MODEL INFERENCE</p>
+        <h1>Student Prediction</h1>
+        <p>Enter all required features from the dataset.</p>
+    </section>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    {% if result %}
+    <section class="results-grid">
+        <article class="card result-card">
+            <p class="muted">Estimated Mathematics Grade</p>
+            <h2>{{ result.grade }} <span>/ 20</span></h2>
+            <p>This is a model estimate, not an official grade.</p>
+        </article>
+
+        <article class="card result-card">
+            <p class="muted">Estimated Academic Risk Category</p>
+            <h2>{{ result.risk }}</h2>
+
+            {% if result.risk_probability is not none %}
+            <p>Estimated model risk probability:
+                <strong>{{ result.risk_probability }}%</strong>
+            </p>
+            {% endif %}
+        </article>
+    </section>
+
+    <div class="notice">
+        Risk probability is a model output and may be poorly calibrated.
+        It should not be interpreted as a confirmed likelihood of failure.
+    </div>
+    {% endif %}
+
+    <form method="POST" class="card form-card">
+        <div class="form-intro">
+            <h2>Student Profile</h2>
+            <p>All fields are required for this version.</p>
+        </div>
+
+        <div class="form-grid">
+            {% for feature in features %}
+            <div class="form-field">
+                <label for="{{ feature.name }}">{{ feature.name }}</label>
+
+                {% if feature.type == "select" %}
+                <select id="{{ feature.name }}"
+                        name="{{ feature.name }}" required>
+                    <option value="">Choose {{ feature.name }}</option>
+                    {% for choice in feature.choices %}
+                    <option value="{{ choice }}"
+                        {% if form_values.get(feature.name, feature.default|string) == choice %}
+                        selected
+                        {% endif %}>
+                        {{ choice }}
+                    </option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                <input
+                    id="{{ feature.name }}"
+                    name="{{ feature.name }}"
+                    type="number"
+                    min="{{ feature.minimum }}"
+                    max="{{ feature.maximum }}"
+                    step="1"
+                    value="{{ form_values.get(feature.name, feature.default) }}"
+                    required>
+                <small>Dataset range: {{ feature.minimum }}–{{ feature.maximum }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <button class="button submit-button" type="submit">
+            Generate Prediction
+        </button>
+    </form>
+</main>
+
+<footer>
+    Developed by P. Naresh | Saveetha University, Chennai
+</footer>
+
+</body>
+</html>

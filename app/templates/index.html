@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPredict AI | Student Analytics</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <a class="brand" href="/">EduPredict <span>AI</span></a>
+    <div class="nav-links">
+        <a href="/">Dashboard</a>
+        <a href="/predict">Make Prediction</a>
+        <a href="/about">About</a>
+    </div>
+</nav>
+
+<main class="container">
+    <section class="hero">
+        <p class="eyebrow">MACHINE LEARNING · STUDENT ANALYTICS</p>
+        <h1>Understand student performance.<br>Support better outcomes.</h1>
+        <p>
+            Explore estimated academic grades and early academic-risk
+            indicators using trained machine-learning models.
+        </p>
+        <a class="button" href="/predict">Start a Prediction →</a>
+    </section>
+
+    <section class="stats">
+        <article class="card">
+            <p class="muted">Dataset Students</p>
+            <h2>{{ total_students }}</h2>
+            <p>UCI Mathematics dataset</p>
+        </article>
+
+        <article class="card">
+            <p class="muted">Grade Prediction</p>
+            <h2>{{ grade_model.get('test_mae', 0) | round(2) }}</h2>
+            <p>Test MAE in grade points</p>
+        </article>
+
+        <article class="card">
+            <p class="muted">Risk Classification</p>
+            <h2>{{ (risk_model.get('test_accuracy', 0) * 100) | round(1) }}%</h2>
+            <p>Held-out test accuracy</p>
+        </article>
+
+        <article class="card">
+            <p class="muted">Risk Recall</p>
+            <h2>{{ (risk_model.get('test_recall', 0) * 100) | round(1) }}%</h2>
+            <p>At-risk class recall on test data</p>
+        </article>
+    </section>
+
+    <section class="section-heading">
+        <p class="eyebrow">PROJECT MODULES</p>
+        <h2>Two prediction capabilities</h2>
+    </section>
+
+    <section class="feature-grid">
+        <article class="card feature-card">
+            <div class="icon">01</div>
+            <h3>Academic Grade Prediction</h3>
+            <p>
+                Estimate a final mathematics grade on a 0–20 scale
+                from the available student background and study features.
+            </p>
+            <a href="/predict">Explore grade prediction →</a>
+        </article>
+
+        <article class="card feature-card">
+            <div class="icon">02</div>
+            <h3>Academic Risk Analysis</h3>
+            <p>
+                Estimate whether the student's profile resembles
+                the dataset's at-risk category.
+            </p>
+            <a href="/predict">Explore risk analysis →</a>
+        </article>
+    </section>
+
+    <section class="notice">
+        <strong>Important limitation</strong>
+        <p>
+            This is a student portfolio project based on a dataset of
+            395 students. Predictions are experimental estimates, not
+            verified outcomes or substitutes for educator judgment.
+            The risk category uses the project definition G3 &lt; 10.
+        </p>
+    </section>
+</main>
+
+<footer>
+    Developed by P. Naresh | Saveetha University, Chennai
+</footer>
+
+</body>
+</html>

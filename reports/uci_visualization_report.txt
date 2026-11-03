@@ -1,0 +1,14 @@
+EDUPREDICT AI - VISUALIZATION REPORT
+==================================================
+Charts generated:
+1. student_risk_distribution.png
+2. regression_model_comparison.png
+3. classification_model_comparison.png
+4. risk_confusion_matrix.png
+5. risk_roc_curve.png
+6. risk_feature_importance.png
+7. actual_vs_predicted_grades.png
+
+Feature importance is measured using permutation importance.
+A feature's importance reflects its effect on test-set F1-score
+when its values are shuffled. It does not prove causation.

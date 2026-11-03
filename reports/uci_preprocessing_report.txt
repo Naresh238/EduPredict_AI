@@ -1,0 +1,13 @@
+EDUPREDICT AI - UCI PREPROCESSING REPORT
+==================================================
+Source: student-mat.csv
+Clean dataset rows: 395
+Feature count: 30
+Target: G3
+Target range: 0-20
+Excluded predictors: G1, G2
+Risk definition: G3 < 10
+Training rows: 316
+Testing rows: 79
+Duplicate rows after cleaning: 0
+Missing values after cleaning: 0

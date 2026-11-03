@@ -1,0 +1,185 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets and environment variables
+.env
+.env.*
+!.env.example
+
+# Local databases
+instance/
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.backup
+*.before_final
+*.analytics-backup
+*.sqlite-backup
+
+# Backup files
+app_backup_*.py
+*_backup*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Operating system and editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Private and local datasets
+data/raw/
+data/processed/
+data/external/
+
+# Individual prediction records
+reports/test_predictions.csv
+reports/uci_test_predictions.csv
+reports/uci_risk_test_predictions.csv
+# EduPredict AI – Student Performance Prediction System
+
+An end-to-end Machine Learning application that predicts student academic performance and identifies students who may be at academic risk.
+
+## Project Overview
+
+EduPredict AI uses Machine Learning to analyze student-related academic and personal factors and generate predictions that can support early academic intervention.
+
+## Key Features
+
+- Student academic grade prediction
+- Student academic risk classification
+- Machine Learning prediction pipelines
+- Data preprocessing and feature engineering
+- Exploratory Data Analysis
+- Model comparison and evaluation
+- Prediction visualization
+- Flask web application
+- Automated model testing
+
+## Technologies Used
+
+- Python
+- Flask
+- Pandas
+- NumPy
+- Scikit-learn
+- Joblib
+- MySQL
+- Plotly
+- HTML
+- CSS
+
+## Project Structure
+
+```text
+EduPredict_AI/
+│
+├── app.py
+├── add_analytics_route.py
+├── check_dataset.py
+├── requirements.txt
+├── .gitignore
+│
+├── app/
+│   ├── static/
+│   └── templates/
+│
+├── models/
+│   ├── uci_best_grade_model.joblib
+│   └── uci_best_risk_model.joblib
+│
+├── src/
+│   ├── 01_data_understanding.py
+│   ├── 02_preprocessing.py
+│   ├── 03_model_training.py
+│   ├── 04_diagnose_model.py
+│   ├── 05_data_quality_investigation.py
+│   ├── 06_inspect_uci_dataset.py
+│   ├── 07_preprocess_uci_dataset.py
+│   ├── 08_train_uci_models.py
+│   ├── 09_train_risk_classifier.py
+│   └── 10_visualize_and_explain.py
+│
+├── reports/
+│   └── Model evaluation reports and visualizations
+│
+└── tests/
+    └── test_models.py
+
+
+Set-Location "C:\Users\n\EduPredict_AI"
+
+@'
+
+# Exclude model trained on local student records
+models/best_model.joblib
+
+# Exclude reports generated from local student records
+reports/attendance_group_analysis.csv
+reports/best_model_summary.json
+reports/data_quality_investigation.txt
+reports/department_average_ml_marks.csv
+reports/feature_correlations_with_ml_marks.csv
+reports/missing_values_report.csv
+reports/model_comparison.csv
+reports/model_diagnostics.txt
+reports/numeric_correlation_matrix.csv
+reports/numeric_summary.csv
+reports/preprocessing_report.txt
+reports/student_risk_distribution.csv
+
+# Exclude visualizations generated from local student records
+reports/actual_vs_predicted_grades.png
+reports/age_distribution.png
+reports/attendance_distribution.png
+reports/attendance_vs_ml_marks.png
+reports/average_ml_marks_by_department.png
+reports/classification_model_comparison.png
+reports/missing_values.png
+reports/ml_marks_distribution.png
+reports/projects_completed_distribution.png
+reports/python_marks_distribution.png
+reports/regression_model_comparison.png
+
+# Local model trained using student records
+models/best_model.joblib
+
+# Reports generated from local student records
+reports/attendance_group_analysis.csv
+reports/best_model_summary.json
+reports/data_quality_investigation.txt
+reports/department_average_ml_marks.csv
+reports/feature_correlations_with_ml_marks.csv
+reports/missing_values_report.csv
+reports/model_comparison.csv
+reports/model_diagnostics.txt
+reports/numeric_correlation_matrix.csv
+reports/numeric_summary.csv
+reports/preprocessing_report.txt
+reports/student_risk_distribution.csv
+
+# Figures generated from local student records
+reports/figures/actual_vs_predicted_grades.png
+reports/figures/age_distribution.png
+reports/figures/attendance_distribution.png
+reports/figures/attendance_vs_ml_marks.png
+reports/figures/average_ml_marks_by_department.png
+reports/figures/missing_values.png
+reports/figures/ml_marks_distribution.png
+reports/figures/projects_completed_distribution.png
+reports/figures/python_marks_distribution.png
+reports/figures/student_risk_distribution.png
+
