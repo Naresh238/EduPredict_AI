@@ -1,7 +1,6 @@
 from pathlib import Path
 import json
 import os
-
 import joblib
 import mysql.connector
 import pandas as pd
@@ -9,17 +8,11 @@ from flask import Flask, render_template, request
 from plotly.utils import PlotlyJSONEncoder
 
 ROOT = Path(__file__).resolve().parent
-
 app = Flask(
     __name__,
     template_folder=str(ROOT / "app" / "templates"),
     static_folder=str(ROOT / "app" / "static"),
 )
-
-# ============================================================
-# MYSQL DATABASE CONFIGURATION
-# ============================================================
-
 DB_CONFIG = {
     "host": os.getenv("EDUPREDICT_DB_HOST", "localhost"),
     "port": int(os.getenv("EDUPREDICT_DB_PORT", "3306")),
@@ -27,8 +20,6 @@ DB_CONFIG = {
     "database": os.getenv("EDUPREDICT_DB_NAME", "edupredict_db"),
     "charset": "utf8mb4",
 }
-
-
 def get_db_connection():
     """Connect to the EduPredict MySQL database."""
     password = os.getenv("EDUPREDICT_DB_PASSWORD")
@@ -43,13 +34,10 @@ def get_db_connection():
     config["password"] = password
 
     return mysql.connector.connect(**config)
-
-
 def init_database():
     """Create the prediction-history table if it does not exist."""
     connection = get_db_connection()
     cursor = None
-
     try:
         cursor = connection.cursor()
 
@@ -77,14 +65,8 @@ def init_database():
         connection.close()
 
 
-# Initialize MySQL when the application starts.
+
 init_database()
-
-
-# ============================================================
-# LOAD MODELS AND DATASET
-# ============================================================
-
 GRADE_MODEL_PATH = ROOT / "models" / "uci_best_grade_model.joblib"
 RISK_MODEL_PATH = ROOT / "models" / "uci_best_risk_model.joblib"
 REPORT_DIR = ROOT / "reports"
@@ -114,12 +96,6 @@ GRADE_FEATURES = [
     for column in dataset.columns
     if column not in ["G1", "G2", "G3"]
 ]
-
-
-# ============================================================
-# INPUT FIELD METADATA
-# ============================================================
-
 def get_feature_metadata():
     metadata = []
 
@@ -163,12 +139,6 @@ def get_feature_metadata():
 
 
 FEATURE_METADATA = get_feature_metadata()
-
-
-# ============================================================
-# STUDENT INPUT VALIDATION
-# ============================================================
-
 def create_input_dataframe(form_data):
     values = {}
 
@@ -234,9 +204,7 @@ def create_input_dataframe(form_data):
     )
 
 
-# ============================================================
-# REPORT LOADING
-# ============================================================
+
 
 def load_json_report(filename):
     path = REPORT_DIR / filename
@@ -255,12 +223,6 @@ def load_json_report(filename):
             path,
         )
         return {}
-
-
-# ============================================================
-# SAVE PREDICTION TO MYSQL
-# ============================================================
-
 def save_prediction(result, form_values):
     connection = get_db_connection()
     cursor = None
@@ -302,9 +264,7 @@ def save_prediction(result, form_values):
         connection.close()
 
 
-# ============================================================
-# HOME PAGE
-# ============================================================
+
 
 @app.route("/")
 def home():
@@ -323,12 +283,6 @@ def home():
         grade_model=grade_summary,
         risk_model=risk_summary,
     )
-
-
-# ============================================================
-# STUDENT PREDICTION
-# ============================================================
-
 @app.route("/predict", methods=["GET", "POST"])
 def predict():
 
@@ -346,7 +300,7 @@ def predict():
                 request.form
             )
 
-            # Predict final grade.
+           
             grade_prediction = float(
                 grade_model.predict(student_data)[0]
             )
@@ -356,7 +310,7 @@ def predict():
                 min(20.0, grade_prediction),
             )
 
-            # Predict academic risk.
+            
             risk_prediction = int(
                 risk_model.predict(student_data)[0]
             )
@@ -395,7 +349,7 @@ def predict():
                 ),
             }
 
-            # Save only successful predictions.
+            
             save_prediction(
                 result,
                 form_values,
@@ -428,9 +382,7 @@ def predict():
     )
 
 
-# ============================================================
-# PREDICTION HISTORY
-# ============================================================
+
 
 @app.route("/history")
 def history():
@@ -475,18 +427,14 @@ def history():
     )
 
 
-# ============================================================
-# ABOUT PAGE
-# ============================================================
+
 
 @app.route("/about")
 def about():
     return render_template("about.html")
 
 
-# ============================================================
-# APPLICATION AND DATABASE HEALTH
-# ============================================================
+
 
 @app.route("/health")
 def health():
@@ -537,16 +485,14 @@ def health():
     )
 
 
-# ============================================================
-# ANALYTICS DASHBOARD
-# ============================================================
+
 
 @app.route("/analytics")
 def analytics():
 
     import plotly.graph_objects as go
 
-    # Read existing evaluation reports.
+    
     regression = pd.read_csv(
         REPORT_DIR / "uci_model_comparison.csv"
     )
@@ -559,7 +505,7 @@ def analytics():
         REPORT_DIR / "uci_risk_permutation_importance.csv"
     )
 
-    # Dataset-level risk distribution.
+   
     grades = pd.to_numeric(
         dataset["G3"],
         errors="coerce",
@@ -584,7 +530,7 @@ def analytics():
         else 0
     )
 
-    # Select grade model.
+   
     grade_row = regression.loc[
         regression["Model"].eq("Random Forest")
     ]
@@ -598,7 +544,7 @@ def analytics():
         grade_row.iloc[0]["Test_MAE"]
     )
 
-    # Select risk model using cross-validation F1.
+   
     eligible_models = classification[
         classification["Model"].ne(
             "Dummy Baseline"
@@ -628,7 +574,7 @@ def analytics():
 
     charts = {}
 
-    # 1. Student risk distribution.
+    
     charts["risk"] = go.Figure(
         data=[
             go.Pie(
@@ -654,7 +600,7 @@ def analytics():
         ),
     ).to_plotly_json()
 
-    # 2. Final grade distribution.
+    
     charts["grade"] = go.Figure(
         data=[
             go.Histogram(
@@ -678,7 +624,7 @@ def analytics():
         ),
     ).to_plotly_json()
 
-    # 3. Regression model comparison.
+   
     regression_sorted = regression.sort_values(
         "Test_MAE"
     )
@@ -709,7 +655,7 @@ def analytics():
         ),
     ).to_plotly_json()
 
-    # 4. Risk classification model comparison.
+   
     classification_sorted = classification.sort_values(
         "Test_F1"
     )
@@ -741,7 +687,7 @@ def analytics():
         ),
     ).to_plotly_json()
 
-    # 5. Top 10 permutation-importance features.
+   
     top_importance = importance.sort_values(
         "Importance_Mean",
         ascending=True,
@@ -781,7 +727,6 @@ def analytics():
         ),
     ).to_plotly_json()
 
-    # 6. Evaluation metrics for selected risk classifier.
     metric_names = [
         "Accuracy",
         "Precision",
@@ -841,9 +786,7 @@ def analytics():
     )
 
 
-# ============================================================
-# RUN APPLICATION
-# ============================================================
+
 
 if __name__ == "__main__":
 
