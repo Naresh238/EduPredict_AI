@@ -1,0 +1,46 @@
+EDUPREDICT AI - GRADE MODEL HYPERPARAMETER TUNING REPORT
+=================================================================
+
+Dataset: UCI Student Performance - Mathematics
+Total students: 395
+Training students: 316
+Testing students: 79
+Input features: 30
+Target: G3 - Final mathematics grade (0-20)
+Excluded features: G1 and G2
+
+OPTIMIZATION DETAILS
+----------------------------------------
+Method: RandomizedSearchCV
+Models: Random Forest and Extra Trees
+Iterations per model: 20
+Cross-validation: 5-fold KFold
+Selection metric: Mean Absolute Error
+
+SELECTED MODEL
+----------------------------------------
+Model: Random Forest
+Best cross-validation MAE: 2.9401
+Test MAE: 2.9086
+Test RMSE: 3.9802
+Test R2: 0.2516
+
+BEST HYPERPARAMETERS
+----------------------------------------
+{
+    "model__n_estimators": 400,
+    "model__min_samples_split": 5,
+    "model__min_samples_leaf": 1,
+    "model__max_features": 1.0,
+    "model__max_depth": null
+}
+
+INTERPRETATION
+----------------------------------------
+MAE measures average absolute prediction error in grade points.
+RMSE gives greater weight to larger prediction errors.
+R2 measures the proportion of target variation explained by the model.
+Lower MAE and RMSE are better. Higher R2 is generally better.
+The test set was kept separate from hyperparameter optimization.
+Feature importance does not establish causation.
+Performance on this dataset does not guarantee performance in other schools.

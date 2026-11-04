@@ -4,6 +4,8 @@ import warnings
 import joblib
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from sklearn.inspection import permutation_importance
@@ -46,7 +48,7 @@ plt.close()
 # --------------------------------------------------
 # 2. REGRESSION MODEL COMPARISON
 # --------------------------------------------------
-regression_file = REPORT_DIR / "uci_model_comparison.csv"
+regression_file = REPORT_DIR / "uci_grade_tuning_results.csv"
 
 if regression_file.exists():
     results = pd.read_csv(regression_file)
@@ -65,18 +67,18 @@ if regression_file.exists():
 # --------------------------------------------------
 # 3. CLASSIFICATION MODEL COMPARISON
 # --------------------------------------------------
-classification_file = REPORT_DIR / "uci_risk_model_comparison.csv"
+classification_file = REPORT_DIR / "uci_risk_tuning_results.csv"
 
 if classification_file.exists():
     results = pd.read_csv(classification_file)
     results = results[results["Model"] != "Dummy Baseline"]
-    results = results.sort_values("CV_F1", ascending=False)
+    results = results.sort_values("Best_CV_F1", ascending=False)
 
     plt.figure(figsize=(10, 6))
-    plt.bar(results["Model"], results["CV_F1"])
-    plt.title("Risk Classification - Cross-Validation F1")
+    plt.bar(results["Model"], results["Best_CV_F1"])
+    plt.title("Tuned Risk Classification - Cross-Validation F1")
     plt.xlabel("Model")
-    plt.ylabel("F1-score")
+    plt.ylabel("Best Cross-Validation F1-score")
     plt.xticks(rotation=30, ha="right")
     plt.tight_layout()
     plt.savefig(FIGURE_DIR / "classification_model_comparison.png", dpi=200)
@@ -96,7 +98,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     stratify=y,
 )
 
-risk_model_path = MODEL_DIR / "uci_best_risk_model.joblib"
+risk_model_path = MODEL_DIR / "uci_tuned_risk_model.joblib"
 risk_model = joblib.load(risk_model_path)
 
 plt.figure(figsize=(7, 6))
@@ -177,7 +179,7 @@ plt.close()
 # --------------------------------------------------
 # 7. ACTUAL VS PREDICTED GRADES
 # --------------------------------------------------
-prediction_file = REPORT_DIR / "uci_test_predictions.csv"
+prediction_file = REPORT_DIR / "uci_tuned_grade_test_predictions.csv"
 
 if prediction_file.exists():
     predictions_df = pd.read_csv(prediction_file)

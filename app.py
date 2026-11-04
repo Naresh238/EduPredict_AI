@@ -67,8 +67,8 @@ def init_database():
 
 
 init_database()
-GRADE_MODEL_PATH = ROOT / "models" / "uci_best_grade_model.joblib"
-RISK_MODEL_PATH = ROOT / "models" / "uci_best_risk_model.joblib"
+GRADE_MODEL_PATH = ROOT / "models" / "uci_tuned_grade_model.joblib"
+RISK_MODEL_PATH = ROOT / "models" / "uci_tuned_risk_model.joblib"
 REPORT_DIR = ROOT / "reports"
 
 grade_model = joblib.load(GRADE_MODEL_PATH)
